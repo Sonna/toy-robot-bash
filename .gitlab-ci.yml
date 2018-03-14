@@ -1,0 +1,7 @@
+image: sonna/bats
+  # name: bvberkum/debian-bats:latest
+  # entrypoint: ["bash"]
+
+test:
+  script:
+  - bin/test
