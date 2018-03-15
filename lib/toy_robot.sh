@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-declare -A MOVE=(
+declare -gA MOVE=(
     [NORTH,X]=0
     [NORTH,Y]=1
     [SOUTH,X]=0
@@ -11,7 +11,7 @@ declare -A MOVE=(
     [WEST,Y]=0
 )
 
-declare -A TURN=(
+declare -gA TURN=(
     [NORTH,LEFT]=WEST
     [NORTH,RIGHT]=EAST
     [SOUTH,LEFT]=EAST
@@ -47,49 +47,61 @@ declare -A TURN=(
 #   fi
 # }
 
+# == Usage Examples:
+#     echo Robot_new: $(Robot_new)
 function Robot_new() {
-  echo "0,0,NORTH"
+  local __properties=$1
+  [[ "$__properties" ]] && echo "$__properties" || echo "0,0,NORTH"
 }
-# echo Robot_new: $(Robot_new)
 
 
+# == Usage Examples:
+#     echo "Robot_left:" $(Robot_left 0,0,NORTH)
 function Robot_left() {
-  local __resultvar=$1
-  local values=(`echo $__resultvar | tr ',' ' '`)
+  local __robot=$1
+  local values=(`echo $__robot | tr ',' ' '`)
 
   local turned=${TURN[${values[2]},LEFT]}
 
   echo "${values[0]},${values[1]},${turned}"
 }
-# echo "Robot_left:" $(Robot_left 0,0,NORTH)
 
 
+# == Usage Examples:
+#     echo "Robot_right:" $(Robot_right 0,0,NORTH)
 function Robot_right() {
-  local __resultvar=$1
-  local values=(`echo $__resultvar | tr ',' ' '`)
+  local __robot=$1
+  local values=(`echo $__robot | tr ',' ' '`)
 
   local turned=${TURN[${values[2]},RIGHT]}
 
   echo "${values[0]},${values[1]},${turned}"
 }
-# echo "Robot_right:" $(Robot_right 0,0,NORTH)
 
 
+# == Usage Examples:
+#     echo "Robot_place:" $(Robot_place 0,0,NORTH)
 function Robot_place() {
-  echo "$1"
+  local __robot=$1
+  local __new_position=$2
+  echo "$__new_position"
 }
-# echo "Robot_place:" $(Robot_place 0,0,NORTH)
 
 
+# == Usage Examples:
+#     echo "Robot_report:" $(Robot_place 0,0,NORTH)
 function Robot_report() {
-  echo "$1"
+  local __robot=$1
+  echo "$__robot"
 }
-# echo "Robot_report:" $(Robot_place 0,0,NORTH)
 
 
+# == Usage Examples:
+#     echo "Robot_move:" $(Robot_move 0,0,NORTH)
+#     echo "Robot_move:" $(Robot_move 0,0,EAST)
 function Robot_move() {
-  local __resultvar=$1
-  local values=(`echo $__resultvar | tr ',' ' '`)
+  local __robot=$1
+  local values=(`echo $__robot | tr ',' ' '`)
 
   local facing=${values[2]}
   local x=$(( "${values[0]}" + "${MOVE[${facing},X]}" ))
@@ -105,60 +117,30 @@ function Robot_move() {
 
   echo "${x},${y},${facing}"
 }
-# echo "Robot_move:" $(Robot_move 0,0,NORTH)
-# echo "Robot_move:" $(Robot_move 0,0,EAST)
 
+# == Usage Examples:
+#    echo "Robot_exec   move 0,0,NORTH:" $(Robot_exec 0,0,NORTH MOVE)
+#    echo "Robot_exec   move 0,1,NORTH:" $(Robot_exec 0,0,NORTH MOVE)
+#    echo "Robot_exec   left 0,0,NORTH:" $(Robot_exec 0,0,NORTH LEFT)
+#    echo "Robot_exec  right 0,0,NORTH:" $(Robot_exec 0,0,NORTH RIGHT)
+#    echo "Robot_exec  place 4,2,NORTH:" $(Robot_exec 0,0,NORTH PLACE 4,2,NORTH)
+#    echo "Robot_exec report 0,0,NORTH:" $(Robot_exec 0,0,NORTH REPORT)
 function Robot_exec() {
-  local __resultvar=$1
-  local __resultargsvar=$2
+  local __robot=$1
+  local __raw_command=$2
+  local __raw_command_args=$3
 
-  local __command="Robot_${__resultvar,,}"
+  local __command="Robot_${__raw_command,,}"
 
-  echo "$($__command $__resultargsvar)"
+  case "$__raw_command" in
+  "MOVE" | "LEFT" | "RIGHT" | "PLACE" | "REPORT")
+    echo "$($__command $__robot $__raw_command_args)"
+    ;;
+  "EXIT")
+    exit 0
+    ;;
+  *)
+    echo "$__robot"
+    ;;
+  esac
 }
-# echo "Robot_exec   move 0,0,NORTH:" $(Robot_exec MOVE 0,0,NORTH)
-# echo "Robot_exec   move 0,1,NORTH:" $(Robot_exec MOVE 0,1,NORTH)
-# echo "Robot_exec   left 0,0,NORTH:" $(Robot_exec LEFT 0,0,NORTH)
-# echo "Robot_exec  right 0,0,NORTH:" $(Robot_exec RIGHT 0,0,NORTH)
-# echo "Robot_exec  place 4,2,NORTH:" $(Robot_exec PLACE 4,2,NORTH)
-# echo "Robot_exec report 0,0,NORTH:" $(Robot_exec REPORT 0,0,NORTH)
-
-
-
-
-
-
-
-
-
-# Robot_new blank_robot 0 0 "NORTH"
-# echo ${blank_robot}
-# echo ${blank_robot[@]}
-# eval 'declare -A robot=$(Robot_new)'
-# echo ${robot}
-# echo "${robot[@]}"
-# echo "${#robot[@]}"
-
-# declare -A tmp_robot=( ["x"]=0 ["y"]=0 ["facing"]="NORTH" )
-# echo ${tmp_robot[@]}
-# echo ${#tmp_robot[@]}
-# echo "${tmp_robot[x]},${tmp_robot[y]},${tmp_robot[facing]}"
-robot=$(Robot_new)
-
-# mapfile -d ',' -t array < <(printf '%s;' "$robot")
-# echo "$array"
-
-# arr=(`echo $robot | tr ',' ' '`)
-
-# echo ${arr[0]}
-# echo ${arr[1]}
-# echo ${arr[2]}
-
-# tmp=$(Robot_new 1 2 "SOUTH")
-# echo ${tmp}
-
-# echo ${MOVE[NORTH,X]}
-# echo ${TURN[NORTH,RIGHT]}
-
-
-
