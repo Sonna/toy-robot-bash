@@ -132,5 +132,15 @@ function Robot_exec() {
 
   local __command="Robot_${__raw_command,,}"
 
-  echo "$($__command $__robot $__raw_command_args)"
+  case "$__raw_command" in
+  "MOVE" | "LEFT" | "RIGHT" | "PLACE" | "REPORT")
+    echo "$($__command $__robot $__raw_command_args)"
+    ;;
+  "EXIT")
+    exit 0
+    ;;
+  *)
+    echo "$__robot"
+    ;;
+  esac
 }

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+LIB_SCRIPT_PATH="$(pwd)/lib/toy_robot_cli.sh"
+. "$LIB_SCRIPT_PATH"
+
+if [ $# != 0 ]
+then
+    arg1="$1"
+    shift 1
+fi
+
+echo -ne $(main $arg1)
