@@ -12,12 +12,169 @@ LIB_SCRIPT_PATH="$(pwd)/lib/toy_robot.sh"
   [ "${values[2]}" == "NORTH" ]
 }
 
-@test "Robot move" {
-  local subject=$(Robot_move $(Robot_new))
+@test "Robot LEFT" {
+  local subject=$(Robot_left $(Robot_new))
   local values=(`echo $subject | tr ',' ' '`)
 
   [ "${values[0]}" -eq 0 ]
-  [ "${values[1]}" == "1" ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "WEST" ]
+}
+
+@test "Robot LEFT from 0,0,NORTH" {
+  local subject=$(Robot_left 0,0,NORTH)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "WEST" ]
+}
+
+@test "Robot LEFT new Robot from WEST" {
+  local subject=$(Robot_left $(Robot_new 0,0,WEST))
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "SOUTH" ]
+}
+
+@test "Robot LEFT from 0,0,WEST" {
+  local subject=$(Robot_left 0,0,WEST)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "SOUTH" ]
+}
+
+@test "Robot LEFT new Robot from SOUTH" {
+  local subject=$(Robot_left $(Robot_new 0,0,SOUTH))
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "EAST" ]
+}
+
+@test "Robot LEFT from 0,0,SOUTH" {
+  local subject=$(Robot_left 0,0,SOUTH)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "EAST" ]
+}
+
+@test "Robot LEFT new Robot from EAST" {
+  local subject=$(Robot_left $(Robot_new 0,0,EAST))
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "NORTH" ]
+}
+
+@test "Robot LEFT from 0,0,EAST" {
+  local subject=$(Robot_left 0,0,EAST)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "NORTH" ]
+}
+
+@test "Robot RIGHT" {
+  local subject=$(Robot_right 0,0,NORTH)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "EAST" ]
+}
+
+@test "Robot RIGHT new Robot" {
+  local subject=$(Robot_right $(Robot_new))
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "EAST" ]
+}
+
+@test "Robot RIGHT from EAST" {
+  local subject=$(Robot_right 0,0,EAST)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "SOUTH" ]
+}
+
+@test "Robot RIGHT new Robot from EAST" {
+  local subject=$(Robot_right $(Robot_new 0,0,EAST))
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "SOUTH" ]
+}
+
+@test "Robot RIGHT from SOUTH" {
+  local subject=$(Robot_right 0,0,SOUTH)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "WEST" ]
+}
+
+@test "Robot RIGHT new Robot from SOUTH" {
+  local subject=$(Robot_right $(Robot_new 0,0,SOUTH))
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "WEST" ]
+}
+
+@test "Robot RIGHT from WEST" {
+  local subject=$(Robot_right 0,0,WEST)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "NORTH" ]
+}
+
+@test "Robot RIGHT new Robot from WEST" {
+  local subject=$(Robot_right $(Robot_new 0,0,WEST))
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
+  [ "${values[2]}" == "NORTH" ]
+}
+
+@test "Robot PLACE" {
+  local subject=$(Robot_place $(Robot_new) 3,3,WEST)
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 3 ]
+  [ "${values[1]}" -eq 3 ]
+  [ "${values[2]}" == "WEST" ]
+}
+
+@test "Robot REPORT" {
+  local subject=$(Robot_new)
+  local subject=$(Robot_report $subject)
+
+  [ "$subject" == "0,0,NORTH" ]
+
+  local values=(`echo $subject | tr ',' ' '`)
+
+  [ "${values[0]}" -eq 0 ]
+  [ "${values[1]}" -eq 0 ]
   [ "${values[2]}" == "NORTH" ]
 }
 
@@ -32,7 +189,7 @@ LIB_SCRIPT_PATH="$(pwd)/lib/toy_robot.sh"
 
 @test "Robot exec MOVE" {
   local subject=$(Robot_new)
-  local subject=$(Robot_exec $(Robot_new) MOVE)
+  local subject=$(Robot_exec $subject MOVE)
   local values=(`echo $subject | tr ',' ' '`)
 
   [ "${values[0]}" -eq 0 ]

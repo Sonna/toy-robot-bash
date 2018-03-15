@@ -50,7 +50,8 @@ declare -gA TURN=(
 # == Usage Examples:
 #     echo Robot_new: $(Robot_new)
 function Robot_new() {
-  echo "0,0,NORTH"
+  local __properties=$1
+  [[ "$__properties" ]] && echo "$__properties" || echo "0,0,NORTH"
 }
 
 
