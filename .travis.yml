@@ -1,0 +1,12 @@
+sudo: required
+
+language: bash
+
+services:
+- docker
+
+before_install:
+- docker pull sonna/bats
+
+script:
+- docker run --rm -v $(pwd):/app -w /app sonna/bats bash -c "bin/test"
